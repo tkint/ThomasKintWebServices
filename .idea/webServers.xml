@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="adcacd4e-69e7-4e30-a276-b81bc0c33f7c" name="Pi Server" url="http://192.168.0.15">
+        <fileTransfer host="192.168.0.15" port="22" rootFolder="/var/www/html/ThomasKintWebServices" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

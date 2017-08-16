@@ -49,7 +49,7 @@ class PageService extends Service
             $data = $pagedao->getPages();
             $links = $linkdao->getLinks();
             foreach ($data as $d) {
-                $d->content = utf8_encode($d->content);
+//                $d->content = utf8_encode($d->content);
                 $i = 0;
                 $link = null;
                 while ($i < sizeof($links) && $link == null) {

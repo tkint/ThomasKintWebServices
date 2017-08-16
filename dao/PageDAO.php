@@ -37,7 +37,7 @@ class PageDAO
     {
         $pages = array();
         $req = $this->pdo->prepare(
-            'SELECT id_page, name, path, content
+            'SELECT id_page, name, path
                       FROM page'
         );
         $req->execute();
