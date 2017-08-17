@@ -18,17 +18,7 @@ class Page
     /**
      * @var
      */
-    public $id_page;
-
-    /**
-     * @var
-     */
     public $name;
-
-    /**
-     * @var
-     */
-    public $path;
 
     /**
      * @var
@@ -38,23 +28,27 @@ class Page
     /**
      * @var
      */
+    public $path;
+	
+	/**
+     * @var
+     */
+    public $icon;
+
+	/**
+     * @var
+     */
+    public $numorder;
+
+    /**
+     * @var
+     */
     public $content;
-
-    /**
-     * @return mixed
+	
+	/**
+     * @var
      */
-    public function getIdPage()
-    {
-        return $this->id_page;
-    }
-
-    /**
-     * @param mixed $id_page
-     */
-    public function setIdPage($id_page)
-    {
-        $this->id_page = $id_page;
-    }
+    public $style;
 
     /**
      * @return mixed
@@ -75,22 +69,6 @@ class Page
     /**
      * @return mixed
      */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
-     * @param mixed $path
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getLink()
     {
         return $this->link;
@@ -103,7 +81,55 @@ class Page
     {
         $this->link = $link;
     }
+	
+	/**
+     * @return mixed
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
 
+    /**
+     * @param mixed $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
+	
+	/**
+     * @param mixed $icon
+     */
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
+    }
+	
+	/**
+     * @return mixed
+     */
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+	
+	/**
+     * @param mixed $numorder
+     */
+    public function setNumorder($numorder)
+    {
+        $this->numorder = $numorder;
+    }
+	
+	/**
+     * @return mixed
+     */
+    public function getNumorder()
+    {
+        return $this->numorder;
+    }
+	
     /**
      * @return mixed
      */
@@ -118,6 +144,22 @@ class Page
     public function setContent($content)
     {
         $this->content = $content;
+    }
+	
+	/**
+     * @return mixed
+     */
+	public function getStyle()
+    {
+        return $this->style;
+    }
+
+    /**
+     * @param mixed $style
+     */
+    public function setStyle($style)
+    {
+        $this->style = $style;
     }
 
     /**
@@ -145,16 +187,20 @@ class Page
     public static function fromArray($array)
     {
         $page = new Page();
-        if (isset($array['id_page']) && !is_null($array['id_page']))
-            $page->setIdPage($array['id_page']);
         if (isset($array['name']) && !is_null($array['name']))
             $page->setName($array['name']);
-        if (isset($array['path']) && !is_null($array['path']))
-            $page->setPath($array['path']);
         if (isset($array['link']) && !is_null($array['link']))
             $page->setLink($array['link']);
+        if (isset($array['path']) && !is_null($array['path']))
+            $page->setPath($array['path']);
+        if (isset($array['icon']) && !is_null($array['icon']))
+            $page->setIcon($array['icon']);
+        if (isset($array['numorder']) && !is_null($array['numorder']))
+            $page->setNumorder($array['numorder']);
         if (isset($array['content']) && !is_null($array['content']))
             $page->setContent($array['content']);
+        if (isset($array['style']) && !is_null($array['style']))
+            $page->setStyle($array['style']);
         return $page;
     }
 }

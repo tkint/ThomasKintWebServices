@@ -23,11 +23,6 @@ class Link
     /**
      * @var
      */
-    public $id_page;
-
-    /**
-     * @var
-     */
     public $name;
 
     /**
@@ -59,22 +54,6 @@ class Link
     public function setIdLink($id_link)
     {
         $this->id_link = $id_link;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIdPage()
-    {
-        return $this->id_page;
-    }
-
-    /**
-     * @param mixed $id_page
-     */
-    public function setIdPage($id_page)
-    {
-        $this->id_page = $id_page;
     }
 
     /**
@@ -168,8 +147,6 @@ class Link
         $link = new Link();
         if (isset($array['id_link']) && !is_null($array['id_link']))
             $link->setIdLink($array['id_link']);
-        if (isset($array['id_page']) && !is_null($array['id_page']))
-            $link->setIdPage($array['id_page']);
         if (isset($array['name']) && !is_null($array['name']))
             $link->setName($array['name']);
         if (isset($array['target']) && !is_null($array['target']))

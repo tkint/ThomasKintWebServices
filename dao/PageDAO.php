@@ -37,8 +37,9 @@ class PageDAO
     {
         $pages = array();
         $req = $this->pdo->prepare(
-            'SELECT id_page, name, path
-                      FROM page'
+            'SELECT name, link, path, icon, numorder
+                      FROM page
+					  ORDER BY numorder'
         );
         $req->execute();
 
@@ -53,31 +54,6 @@ class PageDAO
     }
 
     /**
-     * @param $id_page
-     * @return Page
-     */
-    public function getPageById($id_page)
-    {
-        $page = new Page();
-
-        $req = $this->pdo->prepare(
-            'SELECT id_page, name, path, content
-                      FROM page 
-                      WHERE id_page = :id_page'
-        );
-        $req->bindParam(':id_page', $id_page, PDO::PARAM_INT);
-        $req->execute();
-
-        if (($p = $req->fetchObject(Page::class)) !== false) {
-            $page = $p;
-        }
-
-        $req->closeCursor();
-
-        return $page;
-    }
-
-    /**
      * @param $name
      * @return Page
      */
@@ -86,7 +62,7 @@ class PageDAO
         $page = new Page();
 
         $req = $this->pdo->prepare(
-            'SELECT id_page, name, path, content
+            'SELECT name, link, path, icon, numorder, content, style
                       FROM page 
                       WHERE name = :name'
         );
@@ -107,9 +83,9 @@ class PageDAO
         $page = new Page();
 
         $req = $this->pdo->prepare(
-            'SELECT id_page, name, path, content
+            'SELECT name, link, path, icon, numorder, content, style
                       FROM page 
-                      WHERE id_page = (SELECT MIN(id_page) FROM page)');
+                      WHERE numorder = (SELECT MIN(numorder) FROM page)');
         $req->execute();
 
         if (($a = $req->fetchObject(Page::class)) !== false) {
@@ -126,9 +102,9 @@ class PageDAO
         $page = new Page();
 
         $req = $this->pdo->prepare(
-            'SELECT id_page, name, path, content
+            'SELECT name, link, path, icon, numorder, content, style
                       FROM page 
-                      WHERE id_page = (SELECT MAX(id_page) FROM page)');
+                      WHERE numorder = (SELECT MAX(numorder) FROM page)');
         $req->execute();
 
         if (($p = $req->fetchObject(Page::class)) !== false) {
@@ -147,12 +123,13 @@ class PageDAO
     public function createPage(Page $page)
     {
         $req = $this->pdo->prepare(
-            'INSERT INTO page (name, path, content) 
-                      VALUES (:name, :path, :content)'
+            'INSERT INTO page (name, link, path, icon, numorder, content, style) 
+                      VALUES (:name, :link, :path, :icon, :numorder, :content, :style)'
         );
         $req->bindParam(':name', $page->name, PDO::PARAM_STR);
         $req->bindParam(':path', $page->path, PDO::PARAM_STR);
         $req->bindParam(':content', $page->content, PDO::PARAM_STR);
+        $req->bindParam(':style', $page->style, PDO::PARAM_STR);
         $req->execute();
 
         $page->setIdPage($this->pdo->lastInsertId());
@@ -162,30 +139,31 @@ class PageDAO
 
     public function updatePage(Page $page)
     {
-        if ($page->id_page != null) {
+        if ($page->name != null) {
             $req = $this->pdo->prepare(
                 'UPDATE page SET 
                           name = :name,
                           path = :path,
-                          content = :content
-                          WHERE id_page = :id_page'
+                          content = :content,
+						  style = :style
+                          WHERE name = :name'
             );
-            $req->bindParam(':id_page', $page->id_page, PDO::PARAM_INT);
             $req->bindParam(':name', $page->name, PDO::PARAM_STR);
             $req->bindParam(':path', $page->path, PDO::PARAM_STR);
             $req->bindParam(':content', $page->content, PDO::PARAM_STR);
+            $req->bindParam(':style', $page->style, PDO::PARAM_STR);
             $req->execute();
         }
         return $page;
     }
 
-    public function deletePage($id_page)
+    public function deletePage($name)
     {
         $req = $this->pdo->prepare(
             'DELETE FROM page 
-                      WHERE id_page = :id_page'
+                      WHERE name = :name'
         );
-        $req->bindParam(':id_page', $id_page, PDO::PARAM_INT);
+        $req->bindParam(':name', $name, PDO::PARAM_INT);
         return $req->execute();
     }
 }

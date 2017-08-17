@@ -36,29 +36,10 @@ class PageService extends Service
         $param = WebServices::getParam(0);
         $param2 = WebServices::getParam(1);
         if (isset($param) && !is_null($param)) {
-            if ($param === 'name' && isset($param2) && !is_null($param2)) {
-                $data = $pagedao->getPageByName($param2);
-                $data->content = utf8_encode($data->content);
-                $data->link = $linkdao->getLinkByIdPage($data->id_page);
-            } else {
-                $data = $pagedao->getPageById($param);
-                $data->content = utf8_encode($data->content);
-                $data->link = $linkdao->getLinkByIdPage($data->id_page);
-            }
+			$data = $pagedao->getPageByName($param);
+			$data->content = utf8_encode($data->content);
         } else {
             $data = $pagedao->getPages();
-            $links = $linkdao->getLinks();
-            foreach ($data as $d) {
-//                $d->content = utf8_encode($d->content);
-                $i = 0;
-                $link = null;
-                while ($i < sizeof($links) && $link == null) {
-                    if ($links[$i]->getIdPage() == $d->getIdPage()) {
-                        $d->link = $links[$i];
-                    }
-                    $i++;
-                }
-            }
         }
 
         return $data;

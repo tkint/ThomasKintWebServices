@@ -37,7 +37,7 @@ class LinkDAO
     {
         $links = array();
         $req = $this->pdo->prepare(
-            'SELECT id_link, id_page, name, target, icon, fa
+            'SELECT id_link, name, target, icon, fa
                       FROM link'
         );
         $req->execute();
@@ -61,36 +61,11 @@ class LinkDAO
         $link = new Link();
 
         $req = $this->pdo->prepare(
-            'SELECT id_link, id_page, name, target, icon, fa
+            'SELECT id_link, name, target, icon, fa
                       FROM link 
                       WHERE id_link = :id_link'
         );
         $req->bindParam(':id_link', $id_link, PDO::PARAM_INT);
-        $req->execute();
-
-        if (($a = $req->fetchObject(Link::class)) !== false) {
-            $link = $a;
-        }
-
-        $req->closeCursor();
-
-        return $link;
-    }
-
-    /**
-     * @param $id_link
-     * @return Link
-     */
-    public function getLinkByIdPage($id_page)
-    {
-        $link = new Link();
-
-        $req = $this->pdo->prepare(
-            'SELECT id_link, id_page, name, target, icon, fa
-                      FROM link 
-                      WHERE id_page = :id_page'
-        );
-        $req->bindParam(':id_page', $id_page, PDO::PARAM_INT);
         $req->execute();
 
         if (($a = $req->fetchObject(Link::class)) !== false) {
@@ -107,7 +82,7 @@ class LinkDAO
         $link = new Link();
 
         $req = $this->pdo->prepare(
-            'SELECT id_link, id_page, name, target, icon, fa
+            'SELECT id_link, name, target, icon, fa
                       FROM link 
                       WHERE id_link = (SELECT MIN(id_link) FROM link)');
         $req->execute();
@@ -126,7 +101,7 @@ class LinkDAO
         $link = new Link();
 
         $req = $this->pdo->prepare(
-            'SELECT id_link, id_page, name, target, icon, fa
+            'SELECT id_link, name, target, icon, fa
                       FROM link 
                       WHERE id_link = (SELECT MAX(id_link) FROM link)');
         $req->execute();
@@ -147,10 +122,9 @@ class LinkDAO
     public function createLink(Link $link)
     {
         $req = $this->pdo->prepare(
-            'INSERT INTO link (id_page, name, target, icon, fa) 
-                      VALUES (:id_page, :name, :target, :icon, :fa)'
+            'INSERT INTO link (name, target, icon, fa) 
+                      VALUES (:name, :target, :icon, :fa)'
         );
-        $req->bindParam(':id_page', $link->id_page, PDO::PARAM_INT);
         $req->bindParam(':name', $link->name, PDO::PARAM_STR);
         $req->bindParam(':target', $link->target, PDO::PARAM_STR);
         $req->bindParam(':icon', $link->icon, PDO::PARAM_STR);
@@ -167,7 +141,6 @@ class LinkDAO
         if ($link->id_link != null) {
             $req = $this->pdo->prepare(
                 'UPDATE link SET 
-                          id_page = :id_page,
                           name = :name,
                           target = :target,
                           icon = :password,
@@ -175,7 +148,6 @@ class LinkDAO
                           WHERE id_link = :id_link'
             );
             $req->bindParam(':id_link', $link->id_link, PDO::PARAM_INT);
-            $req->bindParam(':id_page', $link->id_page, PDO::PARAM_INT);
             $req->bindParam(':name', $link->name, PDO::PARAM_STR);
             $req->bindParam(':target', $link->target, PDO::PARAM_STR);
             $req->bindParam(':icon', $link->icon, PDO::PARAM_STR);
