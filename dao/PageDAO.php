@@ -52,6 +52,26 @@ class PageDAO
 
         return $pages;
     }
+	
+	/**
+     * @return array
+     */
+    public function getNumorders()
+    {
+        $numorders = array();
+        $req = $this->pdo->prepare(
+            'SELECT numorder
+                      FROM page
+					  ORDER BY numorder'
+        );
+        $req->execute();
+		
+		$numorders = $req->fetchAll();
+            
+        $req->closeCursor();
+
+        return $numorders;
+    }
 
     /**
      * @param $name
@@ -127,12 +147,13 @@ class PageDAO
                       VALUES (:name, :link, :path, :icon, :numorder, :content, :style)'
         );
         $req->bindParam(':name', $page->name, PDO::PARAM_STR);
+		$req->bindParam(':link', $page->name, PDO::PARAM_STR);
         $req->bindParam(':path', $page->path, PDO::PARAM_STR);
+		$req->bindParam(':icon', $page->icon, PDO::PARAM_STR);
+		$req->bindParam(':numorder', $page->numorder, PDO::PARAM_INT);
         $req->bindParam(':content', $page->content, PDO::PARAM_STR);
         $req->bindParam(':style', $page->style, PDO::PARAM_STR);
         $req->execute();
-
-        $page->setIdPage($this->pdo->lastInsertId());
 
         return $page;
     }
@@ -143,15 +164,21 @@ class PageDAO
             $req = $this->pdo->prepare(
                 'UPDATE page SET 
                           name = :name,
+						  link = :link,
                           path = :path,
+						  icon = :icon,
+						  numorder = :numorder,
                           content = :content,
 						  style = :style
                           WHERE name = :name'
             );
             $req->bindParam(':name', $page->name, PDO::PARAM_STR);
-            $req->bindParam(':path', $page->path, PDO::PARAM_STR);
-            $req->bindParam(':content', $page->content, PDO::PARAM_STR);
-            $req->bindParam(':style', $page->style, PDO::PARAM_STR);
+			$req->bindParam(':link', $page->name, PDO::PARAM_STR);
+			$req->bindParam(':path', $page->path, PDO::PARAM_STR);
+			$req->bindParam(':icon', $page->icon, PDO::PARAM_STR);
+			$req->bindParam(':numorder', $page->numorder, PDO::PARAM_INT);
+			$req->bindParam(':content', $page->content, PDO::PARAM_STR);
+			$req->bindParam(':style', $page->style, PDO::PARAM_STR);
             $req->execute();
         }
         return $page;

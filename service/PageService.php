@@ -36,10 +36,14 @@ class PageService extends Service
         $param = WebServices::getParam(0);
         $param2 = WebServices::getParam(1);
         if (isset($param) && !is_null($param)) {
-			$data = $pagedao->getPageByName($param);
-			$data->content = utf8_encode($data->content);
+			if ($param == 'numorders') {
+				$data = $pagedao->getNumorders();
+			} else {
+				$data = $pagedao->getPageByName($param);
+				$data->content = utf8_encode($data->content);
+			}
         } else {
-            $data = $pagedao->getPages();
+			$data = $pagedao->getPages();
         }
 
         return $data;
