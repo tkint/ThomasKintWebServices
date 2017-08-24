@@ -177,6 +177,13 @@ class Page
     public static function fromJSON($json)
     {
         $object = json_decode($json, true);
+        if (sizeof($object) > 1 && !(isset($object['name']) && !is_null($object['name']))) {
+            $pages = array();
+            foreach ($object as $p) {
+                $pages[] = self::fromArray($p);
+            }
+            return $pages;
+        }
         return self::fromArray($object);
     }
 

@@ -184,6 +184,23 @@ class PageDAO
         return $page;
     }
 
+    public function updateNumorders($pages)
+    {
+        foreach ($pages as $page) {
+            if ($page->name != null) {
+                $req = $this->pdo->prepare(
+                    'UPDATE page SET 
+						  numorder = :numorder
+                          WHERE name = :name'
+                );
+                $req->bindParam(':name', $page->name, PDO::PARAM_STR);
+                $req->bindParam(':numorder', $page->numorder, PDO::PARAM_INT);
+                $req->execute();
+            }
+        }
+        return $pages;
+    }
+
     public function deletePage($name)
     {
         $req = $this->pdo->prepare(

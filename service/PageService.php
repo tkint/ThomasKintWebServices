@@ -8,7 +8,6 @@
 
 namespace service;
 
-use dao\LinkDAO;
 use dao\PageDAO;
 use model\Page;
 use WebServices;
@@ -32,9 +31,7 @@ class PageService extends Service
     {
         $data = null;
         $pagedao = new PageDAO();
-        $linkdao = new LinkDAO();
         $param = WebServices::getParam(0);
-        $param2 = WebServices::getParam(1);
         if (isset($param) && !is_null($param)) {
 			if ($param == 'numorders') {
 				$data = $pagedao->getNumorders();
@@ -77,11 +74,20 @@ class PageService extends Service
     {
         $data = null;
         $pagedao = new PageDAO();
+        $param = WebServices::getParam(0);
         $body = WebServices::getBody();
         if (isset($body) && !is_null($body)) {
-            $page = Page::fromJSON($body);
+            if (isset($param) && !is_null($param)) {
+                if ($param == 'numorders') {
+                    $numorders = Page::fromJSON($body);
 
-            $data = $pagedao->updatePage($page);
+                    $data = $pagedao->updateNumorders($numorders);
+                }
+            } else {
+                $page = Page::fromJSON($body);
+
+                $data = $pagedao->updatePage($page);
+            }
         }
 
         return $data;
