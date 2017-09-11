@@ -4,12 +4,13 @@ ini_set('display_errors', 1);
 
 /**
  * Header definition for requests to be passed on the Web Services
- * Allow only GET, POST, PUT and DELETE methods
+ * Allow only GET, POST, PUT, DELETE and OPTIONS methods
  * Specify json as content
  */
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
-header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Origin: http://localhost:8080");
+//header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Authorization, Content-Type");
 header('Content-Type: application/json; charset=utf-8');
 
 /**
@@ -25,6 +26,14 @@ function __autoload($class_name)
         return;
     }
 }
+
+$token = null;
+$headers = apache_request_headers();
+if(isset($headers['authorization'])){
+    $token = $headers['authorization'];
+}
+
+//var_dump($headers);
 
 // Call the service specified in url
 $result = WebServices::execute($_SERVER['REQUEST_METHOD']);
