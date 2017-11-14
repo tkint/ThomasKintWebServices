@@ -7,8 +7,12 @@ ini_set('display_errors', 1);
  * Allow only GET, POST, PUT, DELETE and OPTIONS methods
  * Specify json as content
  */
-header("Access-Control-Allow-Origin: http://localhost:8080");
-//header("Access-Control-Allow-Credentials: true");
+$headers = apache_request_headers();
+$http_origin = $headers['Origin'];
+if (in_array($http_origin, Config::$ALLOWED_ORIGIN)) {
+    header("Access-Control-Allow-Origin: " . $http_origin);
+}
+header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Authorization, Content-Type");
 header('Content-Type: application/json; charset=utf-8');
@@ -28,8 +32,8 @@ function __autoload($class_name)
 }
 
 $token = null;
-$headers = apache_request_headers();
-if(isset($headers['authorization'])){
+
+if (isset($headers['authorization'])) {
     $token = $headers['authorization'];
 }
 

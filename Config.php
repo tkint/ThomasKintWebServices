@@ -17,4 +17,9 @@ abstract class Config
     const DB_USER = 'thomaskint';
     const DB_PASS = 'thomaskint';
     const DB_BASE = 'thomaskint';
+
+    public static $ALLOWED_ORIGIN = array(
+        'http://localhost:8080',
+        'http://thomaskint.com'
+    );
 }
