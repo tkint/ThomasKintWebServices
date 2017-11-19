@@ -79,6 +79,34 @@ class UserDAO
     }
 
     /**
+     * @param $email
+     * @param $password
+     * @return User
+     */
+    public function getUserByEmailPassword($email, $password)
+    {
+        $user = new User();
+
+        $req = $this->pdo->prepare(
+            'SELECT id_user, email, pseudo, firstname, lastname, role
+                      FROM user 
+                      WHERE email = :email
+                        AND password = :password'
+        );
+        $req->bindParam(':email', $email, PDO::PARAM_STR);
+        $req->bindParam(':password', $password, PDO::PARAM_STR);
+        $req->execute();
+
+        if (($u = $req->fetchObject(User::class)) !== false) {
+            $user = $u;
+        }
+
+        $req->closeCursor();
+
+        return $user;
+    }
+
+    /**
      * @param User $user
      * @return User
      */
