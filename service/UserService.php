@@ -9,6 +9,8 @@
 namespace service;
 
 use dao\UserDAO;
+use error\Error;
+use error\UserErrors;
 use model\User;
 use WebServices;
 
@@ -51,10 +53,31 @@ class UserService extends Service
         $data = null;
         $userdao = new UserDAO();
         $body = WebServices::getBody();
+        $param = WebServices::getParam(0);
         if (isset($body) && !is_null($body)) {
             $user = User::fromJSON($body);
-
-            $data = $userdao->createUser($user);
+            if ($param == 'signin') {
+                if (self::isValidSignin($user)) {
+                    $data = $userdao->getUserByEmailPassword($user->email, $user->password);
+                    if ($data->id_user == null) {
+                        $data = new Error(UserErrors::class, UserErrors::DOES_NOT_EXIST);
+                    }
+                } else {
+                    $data = new Error(UserErrors::class, UserErrors::NOT_VALID);
+                }
+            } else if ($param == 'signup') {
+                if (self::isValidSignup($user)) {
+                    $u = $userdao->getUserByEmailPassword($user->email, $user->password);
+                    if (isset($u->id_user) && !is_null($u->id_user)) {
+                        $data = new Error(UserErrors::class, UserErrors::ALREADY_EXISTS);
+                    } else {
+                        $user->setRole('User');
+                        $data = $userdao->createUser($user);
+                    }
+                } else {
+                    $data = new Error(UserErrors::class, UserErrors::NOT_VALID);
+                }
+            }
         }
 
         return $data;
@@ -65,7 +88,8 @@ class UserService extends Service
      *
      * @return User|null
      */
-    public static function doPut()
+    public
+    static function doPut()
     {
         $data = null;
         $userdao = new UserDAO();
@@ -94,5 +118,20 @@ class UserService extends Service
         }
 
         return $data;
+    }
+
+    private static function isValidSignin($user)
+    {
+        return !is_null($user)
+            && isset($user->email) && !is_null($user->email)
+            && isset($user->password) && !is_null($user->password);
+    }
+
+    private static function isValidSignup($user)
+    {
+        return self::isValidSignin($user)
+            && isset($user->pseudo) && !is_null($user->pseudo)
+            && isset($user->firstname) && !is_null($user->firstname)
+            && isset($user->lastname) && !is_null($user->lastname);
     }
 }

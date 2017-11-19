@@ -177,12 +177,17 @@ class User
     public static function fromJSON($json)
     {
         $object = json_decode($json, true);
-        if (sizeof($object) > 1 && !(isset($object['id_user']) && !is_null($object['id_user']))) {
-            $users = array();
-            foreach ($object as $o) {
-                $users[] = self::fromArray($o);
+        if (!self::isUser($object)) {
+            if (sizeof($object) > 1) {
+                $users = array();
+                foreach ($object as $o) {
+                    if (self::isUser($o)) {
+                        $users[] = self::fromArray($o);
+                    }
+                }
+                return $users;
             }
-            return $users;
+            return null;
         }
         return self::fromArray($object);
     }
@@ -200,5 +205,17 @@ class User
             }
         }
         return $user;
+    }
+
+    public static function isUser($object)
+    {
+        if (is_array($object)) {
+            foreach ($object as $key => $value) {
+                if (property_exists(User::class, $key)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

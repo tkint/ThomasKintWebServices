@@ -8,9 +8,11 @@ ini_set('display_errors', 1);
  * Specify json as content
  */
 $headers = apache_request_headers();
-$http_origin = $headers['Origin'];
-if (in_array($http_origin, Config::$ALLOWED_ORIGIN)) {
-    header("Access-Control-Allow-Origin: " . $http_origin);
+if (isset($headers) && !is_null($headers) && isset($headers['Origin'])) {
+    $http_origin = $headers['Origin'];
+    if (in_array($http_origin, Config::$ALLOWED_ORIGIN)) {
+        header("Access-Control-Allow-Origin: " . $http_origin);
+    }
 }
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
@@ -37,16 +39,15 @@ if (isset($headers['authorization'])) {
     $token = $headers['authorization'];
 }
 
-//var_dump($headers);
-
 // Call the service specified in url
 $result = WebServices::execute($_SERVER['REQUEST_METHOD']);
 
-// If the service answer a good response, display the result encoded in JSON, display an error otherwise
-if (!$result && !is_array($result)) {
-    echo 'Bad Request';
+// If request method is an OPTIONS or result is good return 200. Return 400 otherwise
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+} else if (!$result && !is_array($result)) {
 //    http_response_code(400);
 } else {
     echo json_encode($result);
-//    http_response_code(200);
+    http_response_code(200);
 }
