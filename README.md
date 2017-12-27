@@ -1,5 +1,5 @@
-# PHP Web Services
-A simple web services project written in PHP.
+# Thomas Kint Web Services
+Web services for my personal website.
 
 For each entity, there is three parts:
  - Model
