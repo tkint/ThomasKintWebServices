@@ -31,7 +31,7 @@ class WebServices
      *
      * @return string
      */
-    private function getService()
+    private static function getService()
     {
         $url = explode('/', self::getUrl());
         return ucfirst($url [0]);
@@ -67,7 +67,7 @@ class WebServices
      *
      * @return string
      */
-    private function getUrl()
+    private static function getUrl()
     {
         $url = '';
         if (isset ($_GET [Config::WS_URL]) && !empty ($_GET [Config::WS_URL])) {
