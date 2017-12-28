@@ -17,3 +17,5 @@ One service by url extension, like /page, it serves data called from DAO methods
 
 ## URL
 The url system is basically composed by ip or dns name, followed by service name, then by an id if needed.
+
+https://<hostname>:<port>/<service>/<id>
