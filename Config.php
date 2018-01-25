@@ -20,6 +20,7 @@ abstract class Config
 
     public static $ALLOWED_ORIGIN = array(
         'http://localhost:8080',
+        'http://localhost:8081',
         'http://thomaskint.com',
         'https://thomaskint.com',
         'http://www.thomaskint.com',
